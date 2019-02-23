@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import styled from "@emotion/styled";
-import { Colors, withMargins, margins } from "./design-system";
+import { Colors, margins } from "./design-system";
 import {
   Flex,
   Header,
@@ -18,7 +18,7 @@ const Container = styled(Flex)(margins.mt(2), margins.ml(10), {
   maxWidth: 375
 });
 
-const Block = styled.div(margins.m(2), {
+const Block = styled.div(margins.m(20), {
   width: 100,
   height: 100,
   backgroundColor: "black"

@@ -1,1 +1,1 @@
-export * from "./Spacing";
+export * from "./spacing";

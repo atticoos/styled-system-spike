@@ -16,7 +16,7 @@ const Container = styled(Flex)({
 export default function FocusTimeRow(props) {
   return (
     <Container p={2} mb={1} direction="column" {...props}>
-      <Type size={15} mb={4} color="light">
+      <Type size={15} mb={1} color="light">
         1:30pm
       </Type>
       <Type size={15} weight={500} color="light" link>
