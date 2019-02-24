@@ -18,7 +18,7 @@ const Container = styled(Flex)(margins.mt(2), margins.ml(10), {
   maxWidth: 375
 });
 
-const Block = styled.div(margins.m(20), {
+const Block = styled.div(margins.m(2), {
   width: 100,
   height: 100,
   backgroundColor: "black"

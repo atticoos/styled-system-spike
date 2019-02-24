@@ -1,7 +1,14 @@
 import React from "react";
 import styled from "@emotion/styled";
 import Card from "./Card";
-import { Type } from "../design-system";
+import {
+  Type,
+  typography,
+  margins,
+  padding,
+  nested,
+  composeStyledRules
+} from "../design-system";
 import Button from "./Button";
 
 // This is a good example of where it would be nice
@@ -28,25 +35,26 @@ import Button from "./Button";
 //   )
 // }
 
-const Eyebrow = styled(Type)({
-  fontSize: 12,
-  fontWeight: 700,
-  letterSpacing: 0.5,
-  textTransform: "uppercase"
-}).withComponent("h6");
+const Eyebrow = styled(Type)(
+  typography.size(12),
+  typography.weight(700),
+  typography.spacing(0.5),
+  typography.transform("uppercase")
+).withComponent("h6");
 
-const Header = styled(Type)({
-  fontSize: 18,
-  marginBottom: 16
-}).withComponent("h2");
+const Header = styled(Type)(typography.size(18), margins.mb(2)).withComponent(
+  "h2"
+);
 
-const IconRow = styled(Type)({
-  fontSize: 16,
-  marginBottom: 12,
-  "&:last-of-type": {
-    marginBottom: 16
-  }
-}).withComponent("p");
+const IconRow = styled(Type)(
+  typography.size(16),
+  margins.mb(1.5),
+  nested(composeStyledRules(margins.mb(2), margins.mt(0)), styles => ({
+    "&:last-of-type": {
+      ...styles
+    }
+  }))
+).withComponent("p");
 
 export default function UpcomingEventCard(props) {
   return (

@@ -1,4 +1,57 @@
 // move styledRulesetFactory here
+
+export function createStyledRuleset2(ruleset) {
+  const rules = Object.values(ruleset);
+  function styledRuleset(props) {
+    return rules.reduce(
+      (styles, rule) => ({
+        ...styles,
+        ...rule(props)
+      }),
+      {}
+    );
+  }
+
+  Object.keys(ruleset).forEach(ruleKey => {
+    const rule = ruleset[ruleKey];
+
+    styledRuleset[ruleKey] = value => props =>
+      rule({
+        [ruleKey]: value,
+        ...props
+      });
+  });
+
+  return styledRuleset;
+}
+
+export function createStyledRuleset(ruleset) {
+  const styledRules = Object.values(ruleset);
+
+  function styledRuleset(props) {
+    return styledRules.reduce(
+      (styles, styledRule) => ({
+        ...styles,
+        ...styledRule(props)
+      }),
+      {}
+    );
+  }
+
+  return styledRulesetWithFunctions2(styledRuleset, ruleset);
+}
+
+export function styledRulesetWithFunctions2(styledRuleset, ruleset) {
+  const enhancedStyledRuleset = copy(styledRuleset);
+  Object.keys(ruleset).forEach(ruleKey => {
+    const styledRule = ruleset[ruleKey];
+    enhancedStyledRuleset[ruleKey] = value => props =>
+      styledRule({ [ruleKey]: value, ...props });
+  });
+
+  return enhancedStyledRuleset;
+}
+
 export function createStyledRulesetFactory(applicator) {
   const styledRuleFactory = createStyledRuleFactory(applicator);
   return ruleset => {
