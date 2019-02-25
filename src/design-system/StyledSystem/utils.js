@@ -7,6 +7,10 @@ export const composeStyledRules = (...styledFns) => props =>
     {}
   );
 
+export const compose = composeStyledRules;
+
+export const mapProps = mapper => func => props => func(mapper(props));
+
 export const nested = (styledFn, styledDelegate) => props =>
   styledDelegate(styledFn(props));
 

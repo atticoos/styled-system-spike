@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 import { Box, Colors, Radius, margin, padding } from "../design-system";
 import { fade } from "../utils/colors";
 
-const themes = {
+const appearances = {
   primary: {
     backgroundColor: Colors.Core.Concrete,
     color: Colors.Core.Ink,
@@ -46,18 +46,18 @@ const StyledButton = styled.button(
     fontWeight: 500,
     transition: "background-color 200ms ease-in-out"
   },
-  ({ theme }) => themes[theme] || themes.primary,
+  ({ appearance }) => appearances[appearance] || appearances.primary,
   ({ size }) => sizes[size] || sizes.default
 );
 
 export default function Button({
   children,
-  theme = "primary",
+  appearance = "primary",
   size = "default",
   ...props
 }) {
   return (
-    <StyledButton theme={theme} size={size} {...props}>
+    <StyledButton appearance={appearance} size={size} {...props}>
       {children}
     </StyledButton>
   );

@@ -1,67 +1,112 @@
 import { createStyledRuleset } from "./ruleFactory";
 import { composeStyledRules, withStaticValues } from "./utils";
 
-const BASE_POINT = 8;
-
 // what if we passed in props?
 // styledRulesetFactory(ruleValueFromPropsSelector)
-const getScaledSpacingValue = spacing => spacing * BASE_POINT;
+const getScaledSpacingValue = (spacing, pointSize) => spacing * pointSize;
 
-function createSpacingRuleset(ruleset) {
-  const spacingRuleset = Object.keys(ruleset).reduce(
-    (enhancedRuleset, ruleKey) => {
-      const ruleValue = ruleset[ruleKey];
-      const styleNames = Array.isArray(ruleValue) ? ruleValue : [ruleValue];
+function createSpacingRule(propName, styleNames) {
+  function styledRule({ theme, ...props }) {
+    const spacingValue = props[propName];
+    const spacing = getScaledSpacingValue(spacingValue, theme.grid.pointScale);
 
-      enhancedRuleset[ruleKey] = createSpacingRule(ruleKey, styleNames);
-      return enhancedRuleset;
-    },
-    {}
-  );
-
-  return spacingRuleset;
-}
-
-function createSpacingRule(ruleKey, styleNames) {
-  return props => {
-    const spacing = getScaledSpacingValue(props[ruleKey]);
     if (!isNaN(spacing)) {
-      const out = styleNames.reduce(
+      return styleNames.reduce(
         (styles, styleName) => ({
           ...styles,
           [styleName]: spacing
         }),
         {}
       );
-      return out;
     }
+  }
+
+  return {
+    propName,
+    styleNames,
+    styledRule
   };
 }
 
-const marginRuleset = createSpacingRuleset({
-  m: "margin",
-  mt: "marginTop",
-  mb: "marginBottom",
-  ml: "marginLeft",
-  mr: "marginRight",
-  my: ["marginTop", "marginBottom"],
-  mx: ["marginLeft", "marginRight"]
-});
+const marginRuleset = {
+  all: createSpacingRule("m", ["margin"]),
+  top: createSpacingRule("mt", ["marginTop"]),
+  bottom: createSpacingRule("mb", ["marginBottom"]),
+  left: createSpacingRule("ml", ["marginLeft"]),
+  right: createSpacingRule("mr", ["marginRight"]),
+  vertical: createSpacingRule("my", ["marginTop", "marginBottom"]),
+  horizontal: createSpacingRule("mx", ["marginLeft", "marginRight"])
+};
 
-const paddingRuleset = createSpacingRuleset({
-  p: "padding",
-  pt: "paddingTop",
-  pb: "paddingBottom",
-  pl: "paddingLeft",
-  pr: "paddingRight",
-  px: ["paddingTop", "paddingBottom"],
-  py: ["paddingLeft", "paddingTop"]
-});
+export const margins = composeStyledRules(
+  ...Object.values(marginRuleset).map(({ styledRule }) => styledRule)
+);
+Object.assign(margins, withRulesetAPI(marginRuleset));
 
-const marginRules = Object.values(marginRuleset);
-const paddingRules = Object.values(paddingRuleset);
+const paddingRuleset = {
+  all: createSpacingRule("p", ["padding"]),
+  top: createSpacingRule("pt", ["paddingTop"]),
+  bottom: createSpacingRule("pb", ["paddingBottom"]),
+  left: createSpacingRule("pl", ["paddingLeft"]),
+  right: createSpacingRule("pr", ["paddingRight"]),
+  vertical: createSpacingRule("py", ["paddingTop", "paddingBottom"]),
+  horizontal: createSpacingRule("px", ["paddingLeft", "paddingRight"])
+};
 
-export const margins = composeStyledRules(...marginRules);
-export const padding = composeStyledRules(...paddingRules);
-Object.assign(margins, withStaticValues(marginRuleset));
-Object.assign(padding, withStaticValues(paddingRuleset));
+export const padding = composeStyledRules(
+  ...Object.values(paddingRuleset).map(({ styledRule }) => styledRule)
+);
+Object.assign(padding, withRulesetAPI(paddingRuleset));
+// const paddingRuleset = createSpacingRuleset({
+//   p: "padding",
+//   pt: "paddingTop",
+//   pb: "paddingBottom",
+//   pl: "paddingLeft",
+//   pr: "paddingRight",
+//   px: ["paddingTop", "paddingBottom"],
+//   py: ["paddingLeft", "paddingTop"]
+// });
+
+// const paddingRules = Object.values(paddingRuleset);
+
+// export const padding = composeStyledRules(...paddingRules);
+// // Object.assign(margins, withStaticValues(marginRuleset));
+// Object.assign(padding, withStaticValues(paddingRuleset));
+
+function withRulesetAPI(ruleset) {
+  return Object.keys(ruleset).reduce((rulesetAPI, key) => {
+    const { propName, styledRule } = ruleset[key];
+    rulesetAPI[key] = value => props =>
+      styledRule({ [propName]: value, ...props });
+    return rulesetAPI;
+  }, {});
+}
+
+// const marginRuleset = createSpacingRuleset({
+//   m: "margin",
+//   mt: "marginTop",
+//   mb: "marginBottom",
+//   ml: "marginLeft",
+//   mr: "marginRight",
+//   my: ["marginTop", "marginBottom"],
+//   mx: ["marginLeft", "marginRight"]
+// });
+
+// const marginRules = Object.values(marginRuleset);
+// export const margins = composeStyledRules(...marginRules);
+
+// const paddingRuleset = createSpacingRuleset({
+//   p: "padding",
+//   pt: "paddingTop",
+//   pb: "paddingBottom",
+//   pl: "paddingLeft",
+//   pr: "paddingRight",
+//   px: ["paddingTop", "paddingBottom"],
+//   py: ["paddingLeft", "paddingTop"]
+// });
+
+// const paddingRules = Object.values(paddingRuleset);
+
+// export const padding = composeStyledRules(...paddingRules);
+// // Object.assign(margins, withStaticValues(marginRuleset));
+// Object.assign(padding, withStaticValues(paddingRuleset));

@@ -10,6 +10,7 @@ import {
   composeStyledRules
 } from "../design-system";
 import Button from "./Button";
+console.log("MARGINS", Object.keys(margins));
 
 // This is a good example of where it would be nice
 // to spread (or something) our Spacing variables so that
@@ -42,14 +43,15 @@ const Eyebrow = styled(Type)(
   typography.transform("uppercase")
 ).withComponent("h6");
 
-const Header = styled(Type)(typography.size(18), margins.mb(2)).withComponent(
-  "h2"
-);
+const Header = styled(Type)(
+  typography.size(18),
+  margins.bottom(2)
+).withComponent("h2");
 
 const IconRow = styled(Type)(
   typography.size(16),
-  margins.mb(1.5),
-  nested(composeStyledRules(margins.mb(2), margins.mt(0)), styles => ({
+  margins.bottom(1.5),
+  nested(composeStyledRules(margins.bottom(2), margins.top(0)), styles => ({
     "&:last-of-type": {
       ...styles
     }
